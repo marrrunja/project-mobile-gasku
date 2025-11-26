@@ -10,9 +10,8 @@ class BaseLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF2F8F4,
-      ), // background putih kehijauan lembut
+      backgroundColor: const Color(0xFFF2F8F4),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           const AppHeader(), // Header hijau

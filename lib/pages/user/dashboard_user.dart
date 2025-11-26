@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '/widgets/base_layout.dart';
 import 'stok_gas.dart';
+// import 'pembelian_user.dart';
+// import 'histori_pembelian_user.dart';
 
 class DashboardUserPage extends StatelessWidget {
   const DashboardUserPage({super.key});
@@ -26,8 +28,11 @@ class DashboardUserPage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const StokGasPage(),
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const StokGasPage(),
+                        transitionDuration: Duration.zero, // animasi masuk
+                        reverseTransitionDuration:
+                            Duration.zero, // animasi keluar
                       ),
                     );
                   },
@@ -37,14 +42,34 @@ class DashboardUserPage extends StatelessWidget {
                 _buildMenuButton(
                   icon: Icons.shopping_cart_outlined,
                   title: "Pembelian",
-                  onTap: () {},
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   PageRouteBuilder(
+                    //     pageBuilder: (_, __, ___) => const PembelianPage(),
+                    //     transitionDuration: Duration.zero, // animasi masuk
+                    //     reverseTransitionDuration:
+                    //         Duration.zero, // animasi keluar
+                    //   ),
+                    // );
+                  },
                 ),
                 const SizedBox(height: 45),
 
                 _buildMenuButton(
                   icon: Icons.history,
                   title: "Histori Pembelian",
-                  onTap: () {},
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   PageRouteBuilder(
+                    //     pageBuilder: (_, __, ___) => const HistoriPembelianPage(),
+                    //     transitionDuration: Duration.zero, // animasi masuk
+                    //     reverseTransitionDuration:
+                    //         Duration.zero, // animasi keluar
+                    //   ),
+                    // );
+                  },
                 ),
                 //selesai content
               ],

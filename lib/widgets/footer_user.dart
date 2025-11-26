@@ -6,10 +6,10 @@ class AppFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 70,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-        color: Color(0xCC499B5B),
+        color: Color(0xFF6BB57A),
         // borderRadius: BorderRadius.only(
         //   topLeft: Radius.circular(20),
         //   topRight: Radius.circular(20),
@@ -17,11 +17,7 @@ class AppFooter extends StatelessWidget {
       ),
       child: const Text(
         "©2025 Copyright: GasKu",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: Colors.white, fontSize: 14),
       ),
     );
   }

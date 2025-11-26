@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_gasku/pages/user/dashboard_user.dart';
+import 'package:project_gasku/pages/user/profil_view_user.dart';
 // import 'login_page.dart';
 
 // import 'pages/admin/makedistributor.dart';
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DashboardUserPage(),
+      home: ProfilViewUserPage(),
+      // home: DashboardUserPage(),
       // home: StokGasPage(),
       title: 'Halaman Registrasi Distributor',
       theme: ThemeData(

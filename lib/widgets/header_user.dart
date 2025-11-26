@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../pages/user/profil_view_user.dart';
+import '../pages/user/dashboard_user.dart';
 
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
@@ -20,24 +22,55 @@ class AppHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(Icons.home, color: Colors.white, size: 40),
-
-            Row(
-              children: [
-                // Image.asset("assets/gaslogo.png", width: 40), pake image eror mulu bangsaat
-                const SizedBox(width: 8),
-                const Text(
-                  "GASKU",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+            // Icon Home
+            GestureDetector(
+              onTap: () {
+                // Aksi ketika icon home diklik
+                print("Home diklik");
+                // Misal navigasi ke halaman home:
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const DashboardUserPage(),
+                    transitionDuration: Duration.zero, // animasi masuk
+                    reverseTransitionDuration: Duration.zero, // animasi keluar
                   ),
-                ),
-              ],
+                );
+              },
+              child: const Icon(Icons.home, color: Colors.white, size: 45),
             ),
 
-            const Icon(Icons.person, color: Colors.white, size: 40),
+            // Judul / Spacer
+            const Text(
+              "GASKU",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            // Icon Avatar
+            GestureDetector(
+              onTap: () {
+                // Aksi ketika avatar diklik
+                print("Avatar diklik");
+                // Misal navigasi ke halaman profil:
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const ProfilViewUserPage(),
+                    transitionDuration: Duration.zero, // animasi masuk
+                    reverseTransitionDuration: Duration.zero, // animasi keluar
+                  ),
+                );
+              },
+              child: const CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Color(0xFF499B5B), size: 40),
+              ),
+            ),
           ],
         ),
       ),
