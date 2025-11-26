@@ -3,7 +3,8 @@ import 'package:project_gasku/pages/user/dashboard_user.dart';
 // import 'login_page.dart';
 
 // import 'pages/admin/makedistributor.dart';
-import 'pages/user/stok_gas.dart';
+// import 'pages/user/stok_gas.dart';
+// import 'pages/user/dashboard_user.dart';
 
 void main() {
   runApp(const MyApp());
