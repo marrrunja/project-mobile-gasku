@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:project_gasku/pages/user/dashboard_user.dart';
+// import 'login_page.dart';
 
-import 'pages/admin/makedistributor.dart'; // pastikan file register_page.dart disimpan di folder lib/
+// import 'pages/admin/makedistributor.dart';
+import 'pages/user/stok_gas.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: DashboardUserPage(),
+      // home: StokGasPage(),
       title: 'Halaman Registrasi Distributor',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -23,21 +25,21 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ), // arahkan ke halaman register
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
+      // This is the theme of your application.
+      //
+      // TRY THIS: Try running your application with "flutter run". You'll see
+      // the application has a purple toolbar. Then, without quitting the app,
+      // try changing the seedColor in the colorScheme below to Colors.green
+      // and then invoke "hot reload" (save your changes or press the "hot
+      // reload" button in a Flutter-supported IDE, or press "r" if you used
+      // the command line to start the app).
+      //
+      // Notice that the counter didn't reset back to zero; the application
+      // state is not lost during the reload. To reset the state, use hot
+      // restart instead.
+      //
+      // This works for code too, not just values: Most code changes can be
+      // tested with just a hot reload.
     );
   }
 }
@@ -54,10 +56,10 @@ class _GaskuPageState extends State<GaskuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text("Gasku") ,
-         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text("Gasku"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body:  Stack(
+      body: Stack(
         children: [
           Column(
             children: [
@@ -82,10 +84,7 @@ class _GaskuPageState extends State<GaskuPage> {
 
                       Row(
                         children: [
-                          Image.asset(
-                            "assets/gaslogo.png",
-                            width: 30,
-                          ),
+                          Image.asset("assets/gaslogo.png", width: 30),
                           const SizedBox(width: 8),
                           const Text(
                             "GASKU",
@@ -109,7 +108,6 @@ class _GaskuPageState extends State<GaskuPage> {
               // *********************** //
               //        MENU CARD        //
               // *********************** //
-
               _buildMenuButton(
                 icon: Icons.propane_tank_outlined,
                 title: "Stok Gas",
@@ -150,13 +148,10 @@ class _GaskuPageState extends State<GaskuPage> {
                 child: const Center(
                   child: Text(
                     "©2025 Copyright: GasKu",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -188,7 +183,7 @@ class _GaskuPageState extends State<GaskuPage> {
                 color: Colors.black.withOpacity(0.15),
                 blurRadius: 6,
                 offset: const Offset(2, 3),
-              )
+              ),
             ],
           ),
           child: Row(
