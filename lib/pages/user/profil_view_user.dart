@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/widgets/base_layout.dart';
 import 'profil_edit_user.dart';
+import '../../login_page.dart';
 
 class ProfilViewUserPage extends StatelessWidget {
   const ProfilViewUserPage({super.key});
@@ -80,35 +81,69 @@ class ProfilViewUserPage extends StatelessWidget {
                       const SizedBox(height: 30),
 
                       // Tombol Edit
-                      SizedBox(
-                        width: 120,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (_, __, ___) =>
-                                    const ProfilEditUserPage(),
-                                transitionDuration:
-                                    Duration.zero, // animasi masuk
-                                reverseTransitionDuration:
-                                    Duration.zero, // animasi keluar
+                      // Row untuk tombol Edit dan Logout
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) =>
+                                        const ProfilEditUserPage(),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFFC93C),
+                                foregroundColor: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFFC93C),
-                            foregroundColor: Colors.black87,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              child: const Text(
+                                "EDIT",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                          child: const Text(
-                            "EDIT",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: 120,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // contoh logout: pindah ke halaman login dan hapus stack
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) =>
+                                        LoginPage(),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                  (route) => false,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                "LOGOUT",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),

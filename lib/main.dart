@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:project_gasku/pages/user/dashboard_user.dart';
-import 'package:project_gasku/pages/user/profil_view_user.dart';
+// import 'package:project_gasku/pages/user/dashboard_user.dart';
+// import 'package:project_gasku/pages/user/profil_view_user.dart';
 // import 'login_page.dart';
+// import 'pages/user/detail_transaksi_user.dart';
 
 // import 'pages/admin/makedistributor.dart';
 // import 'pages/user/stok_gas.dart';
 // import 'pages/user/dashboard_user.dart';
+// import 'pages/user/histori_pembelian_user.dart';
+// import 'pages/user/pembelian_user.dart';
+import 'pages/user/detail_pembelian_user.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +23,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfilViewUserPage(),
+      home: DetailPembelianUserPage(),
+      // home: HistoriPembelianPage(),
+      // home: DetailTransaksiUserPage(),
+      // home: ProfilViewUserPage(),
       // home: DashboardUserPage(),
       // home: StokGasPage(),
       title: 'Halaman Registrasi Distributor',
