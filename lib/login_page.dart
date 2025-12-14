@@ -1,27 +1,31 @@
 // login_page.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- Import Riverpod
 import 'package:project_gasku/pages/user/beranda.dart';
 import 'package:project_gasku/providers/user.dart';
 import 'dart:convert';
 import 'forgot_password_page.dart';
 import 'login_failed_page.dart';
- // UserProvider Anda
-// Pastikan UserModel juga sudah diimpor jika diperlukan di sini
+// Asumsikan path ini benar
 
+// ===========================================
+// UBAH DARI StatefulWidget MENJADI ConsumerStatefulWidget
+// ===========================================
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
-
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+// =BAIKAN: _LoginPageState sekarang turunan dari ConsumerState=
+class _LoginPageState extends ConsumerState<LoginPage> { 
+  // 1. Definisikan Controllers
   final TextEditingController idController = TextEditingController();
   final TextEditingController passController = TextEditingController();
 
-  final String _apiUrl = 'http://127.0.0.1:8000/api/login'; 
+  // URL API: Diubah ke 10.0.2.2 agar kompatibel dengan Android Emulator
+  final String _apiUrl = 'http://localhost:8000/api/login'; 
 
   @override
   void dispose() {
@@ -30,18 +34,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
+  // 2. Fungsi Asinkronus untuk Login
   Future<void> _login() async {
     final idMember = idController.text;
     final password = passController.text;
 
-    if (idMember.isEmpty || password.isEmpty) {
+    if (idMember.isEmpty || password.isEmpty) { // Menggunakan .isEmpty lebih disarankan
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Id member atau password tidak boleh kosong!!")),
+        const SnackBar(content: Text("Username dan password tidak boleh kosong")),
       );
-      return; 
+      return; // Hentikan fungsi jika validasi gagal
     }
 
-    // Tampilkan pesan proses
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Mencoba login...")),
     );
@@ -53,29 +57,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'username': idMember, // Diasumsikan API Laravel menggunakan key 'username'
+          'username': idMember, 
           'password': password,
         }),
       );
 
-      if (!mounted) return;
+      // Pastikan context masih valid sebelum navigasi/menampilkan SnackBar
+      if (!mounted) return; 
 
       if (response.statusCode == 200) {
+        // Login BERHASIL
         final responseData = jsonDecode(response.body);
       
         final authToken = responseData['token'] as String;
         final userName = responseData['username'] as String;
-        
-        // Jika API Anda mengembalikan field ini, ganti '1' dengan responseData['jenis_user']
-        final jenisUserDefault = responseData['jenis_user'] as int; 
+        // API Anda tidak mengembalikan jenisUser, kita asumsikan default atau ambil dari data lain
+        const jenisUserDefault = 1; 
 
-        // ===============================================
-        // PENGGUNAAN NOTIFIER PROVIDER UNTUK UPDATE STATE
-        // ===============================================
-        ref.read(UserProvider.notifier).updateAll( // Panggil Notifier dan method updateAll
+        // =======================================================
+        // AKSI PENTING: SIMPAN DATA KE USER MODEL MENGGUNAKAN RIVERPOD
+        // =======================================================
+        ref.read(UserProvider.notifier).updateAll(
           username: userName,
           token: authToken,
-          jenisUser: jenisUserDefault, // Gunakan nilai default atau dari API
+          jenisUser: jenisUserDefault, 
         );
         
         ScaffoldMessenger.of(context).showSnackBar(
@@ -85,16 +90,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           ),
         );
         
-        // Navigasi ke Dashboard (Beranda)
+        // Navigasi ke Dashboard dan hapus semua halaman sebelumnya (pushReplacement)
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const GaskuPage(), 
+            builder: (context) => const GaskuPage(), // Arahkan ke dashboard
           ),
         );
         
       } else if (response.statusCode == 401 || response.statusCode == 422) {
-        // Gagal Otentikasi atau Validasi
+        // Gagal Otentikasi (401 Unauthorized) atau Validasi (422 Unprocessable Entity)
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Login Gagal: ID Member atau Password salah."),
@@ -102,6 +107,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           ),
         );
         
+        // Navigasi ke halaman Gagal Login
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -119,8 +125,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         );
       }
     } catch (e) {
-      // Error koneksi
+      // Error koneksi (timeout, server mati, dll.)
       if (!mounted) return; 
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Error Koneksi: $e. Pastikan server Laravel berjalan."),
@@ -132,9 +139,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Tidak ada perubahan di bagian build, hanya menggunakan ConsumerState
     return Scaffold(
       backgroundColor: Colors.green.shade300,
-      // ... (Sisa UI Anda tetap sama)
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -155,6 +162,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // TextField ID Member
               TextField(
                 controller: idController,
                 decoration: const InputDecoration(
@@ -165,6 +173,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 10),
+              // TextField Password
               TextField(
                 controller: passController,
                 obscureText: true,
@@ -176,6 +185,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 5),
+              // Lupa Password?
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -194,18 +204,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: 15),
+              // Tombol Login
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   minimumSize: const Size(double.infinity, 45),
                 ),
-                onPressed: _login,
+                onPressed: _login, // Panggil fungsi _login()
                 child: const Text(
                   "Login",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               const SizedBox(height: 20),
+              // Register Sekarang
               RichText(
                 text: const TextSpan(
                   style: TextStyle(

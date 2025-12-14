@@ -1,78 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../pages/user/profil_view_user.dart';
-import '../pages/user/dashboard_user.dart';
+import '../login_page.dart';
 
-class AppHeader extends StatelessWidget {
+enum MenuOptions { profile, logout }
+
+class AppHeader extends ConsumerWidget {
   const AppHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: true, // ← INI YANG MENCEGAH NABRAK STATUS BAR
-      child: Container(
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: const BoxDecoration(
-          color: Color(0xCC499B5B),
-          // borderRadius: BorderRadius.only(
-          //   bottomLeft: Radius.circular(20),
-          //   bottomRight: Radius.circular(20),
-          // ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Icon Home
-            GestureDetector(
-              onTap: () {
-                // Aksi ketika icon home diklik
-                print("Home diklik");
-                // Misal navigasi ke halaman home:
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const DashboardUserPage(),
-                    transitionDuration: Duration.zero, // animasi masuk
-                    reverseTransitionDuration: Duration.zero, // animasi keluar
-                  ),
-                );
-              },
-              child: const Icon(Icons.home, color: Colors.white, size: 45),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AppBar(
+      toolbarHeight: 80.0,
+      automaticallyImplyLeading: false,
+      backgroundColor: const Color.fromRGBO(73, 155, 91, 0.8),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // KIRI: HOME
+          GestureDetector(
+            onTap: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            child: const Icon(
+              Icons.home_filled,
+              color: Colors.white,
+              size: 38,
             ),
+          ),
 
-            // Judul / Spacer
-            const Text(
-              "GASKU",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+          // TENGAH: JUDUL
+          const Text(
+            "GASKU",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
+              letterSpacing: 2.5,
             ),
+          ),
 
-            // Icon Avatar
-            GestureDetector(
-              onTap: () {
-                // Aksi ketika avatar diklik
-                print("Avatar diklik");
-                // Misal navigasi ke halaman profil:
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const ProfilViewUserPage(),
-                    transitionDuration: Duration.zero, // animasi masuk
-                    reverseTransitionDuration: Duration.zero, // animasi keluar
-                  ),
-                );
-              },
-              child: const CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Color(0xFF499B5B), size: 40),
-              ),
+          // KANAN: MENU PROFIL
+          PopupMenuButton<MenuOptions>(
+            icon: const Icon(
+              Icons.account_circle,
+              color: Colors.white,
+              size: 40,
             ),
-          ],
-        ),
+            onSelected: (MenuOptions result) {
+              switch (result) {
+                case MenuOptions.profile:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ProfilViewUserPage(),
+                    ),
+                  );
+                  break;
+
+                case MenuOptions.logout:
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LoginPage(),
+                    ),
+                    (route) => false,
+                  );
+                  break;
+              }
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem<MenuOptions>(
+                value: MenuOptions.profile,
+                child: Row(
+                  children: [
+                    Icon(Icons.person, color: Colors.black54),
+                    SizedBox(width: 8),
+                    Text('Profil'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<MenuOptions>(
+                value: MenuOptions.logout,
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(
+                      'Keluar',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

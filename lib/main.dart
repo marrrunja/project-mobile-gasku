@@ -5,7 +5,7 @@ import 'package:project_gasku/pages/user/dashboard_user.dart';
 // import 'package:project_gasku/pages/user/profil_view_user.dart';
 // import 'login_page.dart';
 // import 'pages/user/detail_transaksi_user.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'pages/admin/makedistributor.dart';
 // import 'pages/user/stok_gas.dart';
 // import 'pages/user/dashboard_user.dart';
@@ -15,7 +15,9 @@ import 'pages/user/detail_pembelian_user.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

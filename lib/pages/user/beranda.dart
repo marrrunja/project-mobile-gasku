@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_gasku/login_page.dart';
+import 'package:project_gasku/pages/user/profil_view_user.dart';
+import 'package:project_gasku/pages/user/stok_gas.dart';
 
 enum MenuOptions { profile, logout }
-class GaskuPage extends StatefulWidget {
+
+class GaskuPage extends ConsumerStatefulWidget {
   const GaskuPage({super.key});
 
   @override
-  State<GaskuPage> createState() => _GaskuPageState();
+  ConsumerState<GaskuPage> createState() => _GaskuPageState();
 }
 
-class _GaskuPageState extends State<GaskuPage> {
-  // Opsi untuk PopUpMenuButton
-  // Nilai ini akan digunakan untuk mengidentifikasi item mana yang diklik
-
+class _GaskuPageState extends ConsumerState<GaskuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,12 +24,10 @@ class _GaskuPageState extends State<GaskuPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // KIRI: Icon Home
-            const Row(children: [
-              Icon(Icons.home_filled, color: Colors.white, size: 38.0)
-            ]),
+            // KIRI
+            const Icon(Icons.home_filled, color: Colors.white, size: 38.0),
 
-            // TENGAH: Judul
+            // TENGAH
             const Text(
               "GASKU",
               style: TextStyle(
@@ -39,34 +38,36 @@ class _GaskuPageState extends State<GaskuPage> {
               ),
             ),
 
-            // KANAN: PopUpMenuButton (Menggantikan Icon biasa)
-            // Ini akan menampilkan dropdown
+            // KANAN
             PopupMenuButton<MenuOptions>(
-              // Ikon yang akan ditampilkan sebelum dropdown muncul
               icon: const Icon(
                 Icons.account_circle,
                 color: Colors.white,
                 size: 40.0,
               ),
-              // Fungsi yang dipanggil ketika salah satu item dipilih
               onSelected: (MenuOptions result) {
                 switch (result) {
                   case MenuOptions.profile:
-                    // TODO: Tambahkan navigasi ke halaman Profil
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profil diklik!')),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilViewUserPage()));
                     break;
+
                   case MenuOptions.logout:
-                    // TODO: Tambahkan logika Logout/Keluar
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                    // NANTI BISA TAMBAH:
+                    // ref.read(UserProvider.notifier).logout();
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                      (route) => false,
+                    );
                     break;
                 }
               },
-              // Membangun daftar item dropdown
               itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<MenuOptions>>[
-                const PopupMenuItem<MenuOptions>(
+                  const <PopupMenuEntry<MenuOptions>>[
+                PopupMenuItem<MenuOptions>(
                   value: MenuOptions.profile,
                   child: Row(
                     children: [
@@ -76,7 +77,7 @@ class _GaskuPageState extends State<GaskuPage> {
                     ],
                   ),
                 ),
-                const PopupMenuItem<MenuOptions>(
+                PopupMenuItem<MenuOptions>(
                   value: MenuOptions.logout,
                   child: Row(
                     children: [
@@ -94,19 +95,17 @@ class _GaskuPageState extends State<GaskuPage> {
           ],
         ),
       ),
+
       body: Center(
         child: Column(
           children: [
             const SizedBox(height: 30),
 
-            // *********************** //
-            //      MENU CARD        //
-            // *********************** //
             _buildMenuButton(
               icon: Icons.propane_tank_outlined,
               title: "Stok Gas",
               onTap: () {
-                // Tambahkan aksi ketika Stok Gas diklik
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const StokGasPage()));
               },
             ),
 
@@ -115,9 +114,7 @@ class _GaskuPageState extends State<GaskuPage> {
             _buildMenuButton(
               icon: Icons.shopping_cart_outlined,
               title: "Pembelian",
-              onTap: () {
-                // Tambahkan aksi ketika Pembelian diklik
-              },
+              onTap: () {},
             ),
 
             const SizedBox(height: 20),
@@ -125,16 +122,11 @@ class _GaskuPageState extends State<GaskuPage> {
             _buildMenuButton(
               icon: Icons.history,
               title: "Histori Pembelian",
-              onTap: () {
-                // Tambahkan aksi ketika Histori Pembelian diklik
-              },
+              onTap: () {},
             ),
 
             const Spacer(),
 
-            // *********************** //
-            //         FOOTER          //
-            // *********************** //
             Container(
               padding: const EdgeInsets.all(25.0),
               width: double.infinity,
@@ -160,7 +152,7 @@ class _GaskuPageState extends State<GaskuPage> {
   Widget _buildMenuButton({
     required IconData icon,
     required String title,
-    required Function() onTap,
+    required VoidCallback onTap,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -187,8 +179,11 @@ class _GaskuPageState extends State<GaskuPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon,
-                  color: const Color.fromRGBO(73, 155, 91, 0.8), size: 35),
+              Icon(
+                icon,
+                color: const Color.fromRGBO(73, 155, 91, 0.8),
+                size: 35,
+              ),
               const SizedBox(width: 12),
               Text(
                 title,
