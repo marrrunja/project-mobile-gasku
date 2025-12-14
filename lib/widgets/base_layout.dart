@@ -4,9 +4,7 @@ import 'footer_user.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget child;
-
   const BaseLayout({super.key, required this.child});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +14,8 @@ class BaseLayout extends StatelessWidget {
         children: [
           const AppHeader(), // Header hijau
           const SizedBox(height: 20),
-
           // BODY (halaman)
           Expanded(child: SingleChildScrollView(child: child)),
-
           const AppFooter(), // Footer hijau
         ],
       ),

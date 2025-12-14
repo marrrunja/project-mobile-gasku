@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'pages/user/histori_pembelian_user.dart';
 // import 'pages/user/pembelian_user.dart';
 import 'pages/user/detail_pembelian_user.dart';
+
+import 'package:intl/date_symbol_data_local.dart';
 import 'login_page.dart';
 
 void main() {
