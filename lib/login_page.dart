@@ -1,7 +1,10 @@
 // login_page.dart
 import 'package:flutter/material.dart';
+import 'package:project_gasku/pages/user/dashboard_user.dart';
 import 'forgot_password_page.dart';
 import 'login_failed_page.dart'; // pastikan file ini ada di folder yang sama
+
+// import 'pages/user/dashboard_user.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
@@ -24,15 +27,22 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("LOGIN FORM",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+              const Text(
+                "LOGIN FORM",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
               const SizedBox(height: 20),
               TextField(
                 controller: idController,
                 decoration: const InputDecoration(
                   hintText: "ID Member",
                   border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)))
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -42,9 +52,7 @@ class LoginPage extends StatelessWidget {
                 decoration: const InputDecoration(
                   hintText: "Password",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    )
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                 ),
               ),
@@ -53,62 +61,76 @@ class LoginPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPasswordPage(),
+                    ),
                   );
                 },
                 child: const Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Lupa Password?", style: TextStyle(color: Colors.green)),
+                  child: Text(
+                    "Lupa Password?",
+                    style: TextStyle(color: Colors.green),
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-               style: ElevatedButton.styleFrom(
-               backgroundColor: Colors.green,
-               minimumSize: const Size(double.infinity, 45),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  minimumSize: const Size(double.infinity, 45),
+                ),
+                onPressed: () {
+                  if (idController.text == "1" && passController.text == "1") {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DashboardUserPage(),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginFailedPage(),
+                      ),
+                    );
+                  }
+                },
+                child: const Text(
+                  "Login",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
+<<<<<<< HEAD
               onPressed: () {
                 String username = idController.text;
                 String password = passController.text;
                 if (idController.text == "12345" &&
                   passController.text == "admin123") {
+=======
+>>>>>>> 9513e9820d445aed26506e100d8c7a01c29fb759
 
-                // TODO: nanti kalau ada halaman dashboard, pindah ke sana
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Login Berhasil")),
-                );
-
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginFailedPage()),
-      );
-    }
-  },
-  child: const Text(
-    "Login",
-    style:TextStyle(color: Colors.white)),
-),
-const SizedBox(height: 20),
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black, // warna teks default
-                  fontFamily: "Poppins",
+              const SizedBox(height: 20),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black, // warna teks default
+                    fontFamily: "Poppins",
+                  ),
+                  children: [
+                    TextSpan(text: "Bukan Member? "),
+                    TextSpan(
+                      text: "Register Sekarang",
+                      style: TextStyle(
+                        color: Colors.green, // warna hijau
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              children: [
-              TextSpan(text: "Bukan Member? "),
-              TextSpan(
-                text: "Register Sekarang",
-              style: TextStyle(
-                color: Colors.green,   // warna hijau
-                fontWeight: FontWeight.bold,
-              ),
-              ),
-            ],
-            ),
-          ),
             ],
           ),
         ),
