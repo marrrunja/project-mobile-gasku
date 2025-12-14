@@ -68,6 +68,8 @@ class LoginPage extends StatelessWidget {
                minimumSize: const Size(double.infinity, 45),
               ),
               onPressed: () {
+                String username = idController.text;
+                String password = passController.text;
                 if (idController.text == "12345" &&
                   passController.text == "admin123") {
 
