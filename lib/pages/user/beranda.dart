@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_gasku/login_page.dart';
+import 'package:project_gasku/pages/user/histori_pembelian_user.dart';
 import 'package:project_gasku/pages/user/pembelian_user.dart';
 import 'package:project_gasku/pages/user/profil_view_user.dart';
 import 'package:project_gasku/pages/user/stok_gas.dart';
@@ -112,14 +113,7 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
               icon: Icons.propane_tank_outlined,
               title: "Stok Gas",
               onTap: () {
-                if (user.canBuy == 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Anda belum menyelesaikan transaksi sebelumnya!"),
-                    ),
-                  );
-                  return;
-                }
+                
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const StokGasPage()),
@@ -133,6 +127,14 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
               icon: Icons.shopping_cart_outlined,
               title: "Pembelian",
               onTap: () {
+                if (user.canBuy == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Anda belum menyelesaikan transaksi sebelumnya!"),
+                    ),
+                  );
+                  return;
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -147,7 +149,14 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
             _buildMenuButton(
               icon: Icons.history,
               title: "Histori Pembelian",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HistoriPembelianPage(),
+                  ),
+                );
+              },
             ),
 
             const Spacer(),
