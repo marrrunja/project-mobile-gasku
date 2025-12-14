@@ -105,7 +105,7 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
       body: Center(
         child: Column(
           children: [
-            const Text("$canBuy"),
+            const Text('p'),
             const SizedBox(height: 30),
 
             _buildMenuButton(
