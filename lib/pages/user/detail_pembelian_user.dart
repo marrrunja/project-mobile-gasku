@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import '/widgets/base_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '/widgets/base_layout.dart';
+import '../../providers/detail_pembayaran.dart'; // Import provider
 import 'pembelian_user.dart';
 
-class DetailPembelianUserPage extends StatelessWidget {
+// Ubah menjadi ConsumerWidget
+class DetailPembelianUserPage extends ConsumerWidget {
   const DetailPembelianUserPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Ambil data transaksi dari Provider
+    final transaksi = ref.watch(DetailPembelianProvider);
+
     return BaseLayout(
       child: SingleChildScrollView(
         child: ConstrainedBox(
@@ -18,7 +24,6 @@ class DetailPembelianUserPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // mulai content: Detail Card
                 Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.90,
@@ -26,14 +31,20 @@ class DetailPembelianUserPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
-                      
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                        )
+                      ]
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Center(
                           child: Text(
-                            "PEMBAYARAN",
+                            "DETAIL PEMBAYARAN",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -43,30 +54,29 @@ class DetailPembelianUserPage extends StatelessWidget {
 
                         const SizedBox(height: 20),
 
-                        _row("Harga Satuan", "Rp 28.000"),
+                        // Menampilkan Data Dinamis dari Provider
+                        _row("Tanggal", transaksi.tanggalFormatted), 
                         const SizedBox(height: 10),
-                        _row("Biaya Admin", "Rp 2.500"),
+                        _row("Status", transaksi.status, color: Colors.orange),
                         const SizedBox(height: 10),
-                        _row("Metode Pembayaran", "BRI TRANSFER"),
-                        const SizedBox(height: 10),
-                        _row("Jumlah Pembelian", "1"),
-
-                        const SizedBox(height: 10),
+                        
                         const Divider(),
-
                         const SizedBox(height: 10),
-                        _row("Total", "Rp 30.500", isBold: true),
+                        
+                        _row("Jumlah Pembelian", "${transaksi.jumlahPembelian} Tabung"),
+                        const SizedBox(height: 10),
+                        _row("Total Tagihan", "Rp ${transaksi.totalHarga}", isBold: true, fontSize: 16),
 
                         const SizedBox(height: 25),
 
-                        //button
+                        // Tombol Action
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(
                                       pageBuilder: (_, __, ___) =>
@@ -79,13 +89,9 @@ class DetailPembelianUserPage extends StatelessWidget {
                                 icon: const Icon(Icons.arrow_back),
                                 label: const Text("Kembali"),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(
-                                    0xFF63A751,
-                                  ).withOpacity(0.7),
+                                  backgroundColor: const Color(0xFF63A751).withOpacity(0.7),
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6),
                                   ),
@@ -94,16 +100,18 @@ class DetailPembelianUserPage extends StatelessWidget {
                             ),
                             const SizedBox(width: 12),
 
-                            //Button Bayar (WhatsApp)
+                            // Tombol Bayar (WhatsApp) Dinamis
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: () async {
-                                  final phone = "+6282255301884";
+                                  final phone = "+6282255301884"; // Ganti nomor admin
                                   final message = Uri.encodeComponent(
-                                    "Halo, saya ingin membayar gas ",
+                                    "Halo Admin, saya ingin konfirmasi pembayaran gas.\n"
+                                    "Tanggal: ${transaksi.tanggalFormatted}\n"
+                                    "Jumlah: ${transaksi.jumlahPembelian}\n"
+                                    "Total: Rp ${transaksi.totalHarga}"
                                   );
-                                  final url =
-                                      "https://wa.me/$phone?text=$message";
+                                  final url = "https://wa.me/$phone?text=$message";
 
                                   if (await canLaunchUrl(Uri.parse(url))) {
                                     await launchUrl(
@@ -111,19 +119,17 @@ class DetailPembelianUserPage extends StatelessWidget {
                                       mode: LaunchMode.externalApplication,
                                     );
                                   } else {
-                                    debugPrint("Tidak bisa membuka WhatsApp");
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Gagal membuka WhatsApp"))
+                                    );
                                   }
                                 },
                                 icon: const Icon(Icons.payment),
-                                label: const Text("Bayar Rp 30.000"),
+                                label: const Text("Konfirmasi WA"),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(
-                                    0xFF63A751,
-                                  ).withOpacity(0.7),
+                                  backgroundColor: const Color(0xFF63A751).withOpacity(0.7),
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6),
                                   ),
@@ -136,7 +142,6 @@ class DetailPembelianUserPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                // selesai content
               ],
             ),
           ),
@@ -145,22 +150,23 @@ class DetailPembelianUserPage extends StatelessWidget {
     );
   }
 
-  _row(String left, String right, {bool isBold = false}) {
+  Widget _row(String left, String right, {bool isBold = false, Color? color, double fontSize = 14}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           left,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: fontSize,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
         ),
         Text(
           right,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: fontSize,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            color: color ?? Colors.black,
           ),
         ),
       ],
