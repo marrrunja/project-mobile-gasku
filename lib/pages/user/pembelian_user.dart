@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:project_gasku/providers/user.dart';
 import '/widgets/base_layout.dart';
 import 'dashboard_user.dart';
 import 'detail_transaksi_user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PembelianUserPage extends StatelessWidget {
+class PembelianUserPage extends ConsumerWidget {
   const PembelianUserPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Akses user dari provider
+    final user = ref.watch(UserProvider);
+
     return BaseLayout(
       child: SingleChildScrollView(
         child: ConstrainedBox(
@@ -18,9 +23,8 @@ class PembelianUserPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Mulai card profil
+                const SizedBox(height: 20),
 
-                // Judul
                 const Text(
                   "Masukkan Jumlah Gas yang ingin dibeli",
                   style: TextStyle(
@@ -32,15 +36,11 @@ class PembelianUserPage extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                // Card Input Jumlah
                 Container(
                   width: MediaQuery.of(context).size.width * 0.90,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 16,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Color(0xFF6BB57A),
+                    color: const Color(0xFF6BB57A),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.black12),
                   ),
@@ -75,8 +75,6 @@ class PembelianUserPage extends StatelessWidget {
 
                 const SizedBox(height: 25),
 
-                // Card Perhatian
-
                 // Tombol Pesan Sekarang
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -85,8 +83,7 @@ class PembelianUserPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) =>
-                              const DetailTransaksiUserPage(),
+                          pageBuilder: (_, __, ___) => const DetailTransaksiUserPage(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -119,8 +116,7 @@ class PembelianUserPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) =>
-                              const DashboardUserPage(),
+                          pageBuilder: (_, __, ___) => const DashboardUserPage(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -140,8 +136,6 @@ class PembelianUserPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    
-                    
                   ),
                 ),
 
@@ -179,8 +173,6 @@ class PembelianUserPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // Selesai card profil
               ],
             ),
           ),

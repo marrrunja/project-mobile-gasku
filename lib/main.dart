@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'pages/user/histori_pembelian_user.dart';
 // import 'pages/user/pembelian_user.dart';
 import 'pages/user/detail_pembelian_user.dart';
-
+import 'login_page.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GaskuPage(),
+      home: LoginPage(),
       // home: HistoriPembelianPage(),
       // home: DetailTransaksiUserPage(),
 

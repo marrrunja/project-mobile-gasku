@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_gasku/providers/user.dart';
+import 'package:http/http.dart' as http;
 import '../pages/user/profil_view_user.dart';
 import '../login_page.dart';
+import 'dart:convert';
 
 enum MenuOptions { profile, logout }
 
@@ -10,6 +13,66 @@ class AppHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(UserProvider);
+
+    // Fungsi logout
+    Future<void> _logout() async {
+      final token = user.token;
+      if (token.isEmpty) return;
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://localhost:8000/api/logout'),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          // Hapus data user di provider
+          ref.read(UserProvider.notifier).clear();
+
+          final decoded = jsonDecode(response.body);
+          final message = decoded['message'] ?? 'Logout berhasil';
+
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            // Navigasi ke LoginPage dan hapus semua halaman sebelumnya
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginPage()),
+              (route) => false,
+            );
+          }
+        } else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Logout gagal: ${response.statusCode}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error saat logout: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+
     return AppBar(
       toolbarHeight: 80.0,
       automaticallyImplyLeading: false,
@@ -22,11 +85,7 @@ class AppHeader extends ConsumerWidget {
             onTap: () {
               Navigator.popUntil(context, (route) => route.isFirst);
             },
-            child: const Icon(
-              Icons.home_filled,
-              color: Colors.white,
-              size: 38,
-            ),
+            child: const Icon(Icons.home_filled, color: Colors.white, size: 38),
           ),
 
           // TENGAH: JUDUL
@@ -59,13 +118,7 @@ class AppHeader extends ConsumerWidget {
                   break;
 
                 case MenuOptions.logout:
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const LoginPage(),
-                    ),
-                    (route) => false,
-                  );
+                  _logout(); // Panggil fungsi logout di sini
                   break;
               }
             },
@@ -86,10 +139,7 @@ class AppHeader extends ConsumerWidget {
                   children: [
                     Icon(Icons.logout, color: Colors.red),
                     SizedBox(width: 8),
-                    Text(
-                      'Keluar',
-                      style: TextStyle(color: Colors.red),
-                    ),
+                    Text('Keluar', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),

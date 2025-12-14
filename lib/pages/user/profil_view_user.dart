@@ -133,6 +133,11 @@ class ProfilViewUserPage extends ConsumerWidget {
                                 "Alamat",
                                 user['alamat_lengkap'] ?? '-',
                               ),
+                               _buildSpacerRow(),
+                              _buildTableRow(
+                                "Jenis",
+                                user['jenis_user'] == 1 ? 'Distributor':'Pembeli',
+                              ),
                             ],
                           ),
 

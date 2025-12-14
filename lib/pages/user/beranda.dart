@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_gasku/login_page.dart';
+import 'package:project_gasku/pages/user/pembelian_user.dart';
 import 'package:project_gasku/pages/user/profil_view_user.dart';
 import 'package:project_gasku/pages/user/stok_gas.dart';
+import 'package:project_gasku/providers/user.dart';
 
 enum MenuOptions { profile, logout }
 
@@ -16,6 +18,8 @@ class GaskuPage extends ConsumerStatefulWidget {
 class _GaskuPageState extends ConsumerState<GaskuPage> {
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(UserProvider);
+    final canBuy = user.canBuy.toString();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80.0,
@@ -48,7 +52,12 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
               onSelected: (MenuOptions result) {
                 switch (result) {
                   case MenuOptions.profile:
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilViewUserPage()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfilViewUserPage(),
+                      ),
+                    );
                     break;
 
                   case MenuOptions.logout:
@@ -67,30 +76,27 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
               },
               itemBuilder: (BuildContext context) =>
                   const <PopupMenuEntry<MenuOptions>>[
-                PopupMenuItem<MenuOptions>(
-                  value: MenuOptions.profile,
-                  child: Row(
-                    children: [
-                      Icon(Icons.person, color: Colors.black54),
-                      SizedBox(width: 8),
-                      Text('Profil'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<MenuOptions>(
-                  value: MenuOptions.logout,
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text(
-                        'Keluar',
-                        style: TextStyle(color: Colors.red),
+                    PopupMenuItem<MenuOptions>(
+                      value: MenuOptions.profile,
+                      child: Row(
+                        children: [
+                          Icon(Icons.person, color: Colors.black54),
+                          SizedBox(width: 8),
+                          Text('Profil'),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                    PopupMenuItem<MenuOptions>(
+                      value: MenuOptions.logout,
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('Keluar', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
             ),
           ],
         ),
@@ -99,13 +105,25 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
       body: Center(
         child: Column(
           children: [
+            const Text("$canBuy"),
             const SizedBox(height: 30),
 
             _buildMenuButton(
               icon: Icons.propane_tank_outlined,
               title: "Stok Gas",
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const StokGasPage()));
+                if (user.canBuy == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Anda belum menyelesaikan transaksi sebelumnya!"),
+                    ),
+                  );
+                  return;
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const StokGasPage()),
+                );
               },
             ),
 
@@ -114,7 +132,14 @@ class _GaskuPageState extends ConsumerState<GaskuPage> {
             _buildMenuButton(
               icon: Icons.shopping_cart_outlined,
               title: "Pembelian",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PembelianUserPage(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
